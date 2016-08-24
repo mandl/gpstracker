@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="einstell"
+        android:title="Options" >
+        <CheckBoxPreference
+            android:key="pref_SendLocationSMS"
+            android:title="Send location" android:persistent="true" android:defaultValue="true" android:summary="Send the location via  SMS"/>
+        <EditTextPreference android:title="Phone number" android:summary="Set the default number" android:key="pref_PhoneNumber"/>
+        <EditTextPreference android:title="Code" android:summary="Set the sms pin code" android:key="pref_Code" android:defaultValue="1234"/>
+        <CheckBoxPreference android:title="Powerfail SMS" android:key="pref_PowerFailSMS" android:summary="Send a SMS when power is low"/>
+    </PreferenceCategory>
+        android:persistent="true"
+
+</PreferenceScreen>
