@@ -53,8 +53,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 		super.onCreate();
 		Log.i(TAG_STEUERUNG, "onCreate");
 		// REGISTER A BROADCAST RECEIVER
-		IntentFilter localIntentFilter = new IntentFilter(
-				"android.provider.Telephony.SMS_RECEIVED");
+		IntentFilter localIntentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		localIntentFilter.setPriority(2147483646);
 		// Instance field for listener
 
@@ -86,8 +85,6 @@ public class GPSTrackerService extends Service implements LocationListener {
 	double latitude;
 	double longitude;
 
-	
-
 	// send location via sms
 	public static final String ACTION_SMS_AN = "ACTION_SMS_AN";
 	public static final String ACTION_SMS_AN_NUMBER = "ACTION_SMS_AN_NUMBER";
@@ -99,6 +96,8 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	// DECLARING A LOCATION MANAGER
 	protected LocationManager locationManager;
+
+	private boolean SINGLE_LOCATION_MODE = false;
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in
@@ -161,12 +160,10 @@ public class GPSTrackerService extends Service implements LocationListener {
 			Log.i(TAG_STEUERUNG, provider);
 
 			// GET GPS STATUS
-			isGPSEnabled = locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 			// GET NETWORK STATUS
-			isNetworkEnabled = locationManager
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+			isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 			if (!isGPSEnabled && !isNetworkEnabled) {
 				// NO NETWORK PROVIDERS AVAILABLE
@@ -176,11 +173,15 @@ public class GPSTrackerService extends Service implements LocationListener {
 				// IF GPS IS ENABLED GET THE LAT/LONG USING GPS SERVICES
 				if (isGPSEnabled) {
 					if (locationManager != null) {
-						Log.d(TAG_STEUERUNG, "GPS Enabled");
-						locationManager.requestSingleUpdate(
-								LocationManager.GPS_PROVIDER, this, null);
-						// /locationManager.requestLocationUpdates(
-						// LocationManager.GPS_PROVIDER, 10000, 0, this);
+
+						if (SINGLE_LOCATION_MODE == true)
+
+						{
+							Log.d(TAG_STEUERUNG, "GPS Enabled");
+							locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+						} else {
+							locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
+						}
 					}
 				}
 			}
@@ -253,8 +254,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 			Number = strNumber;
 
 		}
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (preferences.getBoolean("pref_SendLocationSMS", true)) {
 			try {
@@ -279,12 +279,8 @@ public class GPSTrackerService extends Service implements LocationListener {
 		}
 		String date = df.format(Calendar.getInstance().getTime());
 
-		String latitudestr = String.valueOf(Math.round(FIVE_DIGIT
-				* getLatitude())
-				/ FIVE_DIGIT);
-		String longitudestr = String.valueOf(Math.round(FIVE_DIGIT
-				* getLongitude())
-				/ FIVE_DIGIT);
+		String latitudestr = String.valueOf(Math.round(FIVE_DIGIT * getLatitude()) / FIVE_DIGIT);
+		String longitudestr = String.valueOf(Math.round(FIVE_DIGIT * getLongitude()) / FIVE_DIGIT);
 		text = "Location: " + date + " " + latitudestr + ",  " + longitudestr;
 		Log.d(TAG_STEUERUNG, "SendSMS" + Number + " " + text);
 		try {
