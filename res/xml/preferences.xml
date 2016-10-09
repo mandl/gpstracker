@@ -10,6 +10,7 @@
         <EditTextPreference android:title="Phone number" android:summary="Set the default number" android:key="pref_PhoneNumber"/>
         <EditTextPreference android:title="Code" android:summary="Set the sms pin code" android:key="pref_Code" android:defaultValue="1234"/>
         <CheckBoxPreference android:title="Powerfail SMS" android:key="pref_PowerFailSMS" android:summary="Send a SMS when power is low"/>
+        <CheckBoxPreference android:title="Single GPS Update" android:key="pref_SingleGPSUpdate" android:summary="Request a single GPS update. Does not work on every mobile phone" android:enabled="true"/>
     </PreferenceCategory>
         android:persistent="true"
 

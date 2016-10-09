@@ -60,6 +60,17 @@ public class GPSTrackerService extends Service implements LocationListener {
 		mReceiver = new SmsReceiver();
 		registerReceiver(mReceiver, localIntentFilter);
 
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if (preferences.getBoolean("pref_SingleGPSUpdate", false)) {
+
+			singleLocationGPSUpdate = true;
+
+		} else {
+			singleLocationGPSUpdate = false;
+
+		}
+
 	}
 
 	@Override
@@ -97,7 +108,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 	// DECLARING A LOCATION MANAGER
 	protected LocationManager locationManager;
 
-	private boolean SINGLE_LOCATION_MODE = false;
+	private boolean singleLocationGPSUpdate;
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in
@@ -174,7 +185,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 				if (isGPSEnabled) {
 					if (locationManager != null) {
 
-						if (SINGLE_LOCATION_MODE == true)
+						if (singleLocationGPSUpdate == true)
 
 						{
 							Log.d(TAG_STEUERUNG, "GPS Enabled");
